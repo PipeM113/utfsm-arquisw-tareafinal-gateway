@@ -7,9 +7,7 @@ from app.api.mensajes.v1 import routes as mensajes_v1
 from app.api.moderacion.v1 import routes as moderacion_v1
 from app.api.presencia.v1 import routes as presencia_v1
 from app.api.wikipedia.v1 import routes as wikipedia_v1
-import logging
-
-logging.basicConfig(level=logging.INFO)
+from app.api.archivos.v1 import routes as archivos_v1
 
 
 app = FastAPI(title=settings.app_name)
@@ -30,3 +28,4 @@ app.include_router(mensajes_v1.router, prefix="/api/v1/mensajes")
 app.include_router(moderacion_v1.router, prefix="/api/v1/moderacion")
 app.include_router(presencia_v1.router, prefix="/api/v1/presencia")
 app.include_router(wikipedia_v1.router, prefix="/api/v1/wikipedia")
+app.include_router(archivos_v1.router, prefix="/api/v1/archivos")
