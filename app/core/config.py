@@ -25,5 +25,11 @@ class Settings:
         "https://messages-service.kroder.dev",
     )
 
+    # Moderación
+    moderation_service_base_url: str = os.getenv(
+        "MODERATION_SERVICE_BASE_URL",
+        "https://moderation.inf326.nur.dev",
+    )
+
 
 settings = Settings()
