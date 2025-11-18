@@ -1,3 +1,4 @@
+# app/core/config.py
 from dataclasses import dataclass
 import os
 
@@ -35,6 +36,18 @@ class Settings:
     presence_service_base_url: str = os.getenv(
         "PRESENCE_SERVICE_BASE_URL",
         "https://moderation.inf326.nur.dev",
+    )
+
+    # Chatbot Wikipedia
+    wikipedia_service_base_url: str = os.getenv(
+        "WIKIPEDIA_SERVICE_BASE_URL",
+        "http://wikipedia-chatbot-134-199-176-197.nip.io",
+    )
+
+    # Archivos
+    files_service_base_url: str = os.getenv(
+        "FILES_SERVICE_BASE_URL",
+        "http://file-service-134-199-176-197.nip.io/",
     )
 
 
