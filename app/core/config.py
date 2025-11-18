@@ -31,5 +31,11 @@ class Settings:
         "https://moderation.inf326.nur.dev",
     )
 
+    # Presencia
+    presence_service_base_url: str = os.getenv(
+        "PRESENCE_SERVICE_BASE_URL",
+        "https://moderation.inf326.nur.dev",
+    )
+
 
 settings = Settings()

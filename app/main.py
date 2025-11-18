@@ -5,6 +5,7 @@ from app.api.canales.v1 import routes as canales_v1
 from app.api.usuarios.v1 import routes as usuarios_v1
 from app.api.mensajes.v1 import routes as mensajes_v1
 from app.api.moderacion.v1 import routes as moderacion_v1
+from app.api.presencia.v1 import routes as presencia_v1
 
 
 app = FastAPI(title=settings.app_name)
@@ -18,8 +19,9 @@ def read_root():
     }
 
 
-# Versión 1 de la API
+# Versión 1 de la API: montamos servicios
 app.include_router(canales_v1.router, prefix="/api/v1/canales")
 app.include_router(usuarios_v1.router, prefix="/api/v1/usuarios")
 app.include_router(mensajes_v1.router, prefix="/api/v1/mensajes")
 app.include_router(moderacion_v1.router, prefix="/api/v1/moderacion")
+app.include_router(presencia_v1.router, prefix="/api/v1/presencia")
