@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.core.config import settings
 from app.api.canales.v1 import routes as canales_v1
+from app.api.usuarios.v1 import routes as usuarios_v1
 
 
 app = FastAPI(title=settings.app_name)
@@ -16,3 +17,4 @@ def read_root():
 
 
 app.include_router(canales_v1.router, prefix="/api/v1/canales")
+app.include_router(usuarios_v1.router, prefix="/api/v1/usuarios")
