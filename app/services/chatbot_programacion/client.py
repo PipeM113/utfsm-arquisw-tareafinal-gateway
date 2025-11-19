@@ -8,7 +8,7 @@ from app.services.chatbot_programacion.schemas import (
     ChatResponse,
 )
 
-BASE_URL = settings.chatbot_programacion_service_base_url.rstrip("/")
+BASE_URL = settings.chatbot_service_base_url.rstrip("/")
 
 
 async def health() -> HealthResponse:
