@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field
 
 
 class ThreadStatus(str, Enum):
@@ -13,13 +13,13 @@ class ThreadStatus(str, Enum):
 
 class ThreadCreate(BaseModel):
     channel_id: str
-    title: constr(min_length=1, max_length=200)
+    title: str= Field(..., min_length=1, max_length=200)
     created_by: str
     meta: Optional[Dict[str, Any]] = None
 
 
 class ThreadUpdate(BaseModel):
-    title: Optional[constr(min_length=1, max_length=200)] = None
+    title: Optional[str] = Field(None, min_length=1, max_length=200)
     status: Optional[ThreadStatus] = None
     meta: Optional[Dict[str, Any]] = None
 
