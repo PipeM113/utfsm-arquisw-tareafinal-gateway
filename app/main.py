@@ -8,7 +8,8 @@ from app.api.moderacion.v1 import routes as moderacion_v1
 from app.api.presencia.v1 import routes as presencia_v1
 from app.api.wikipedia.v1 import routes as wikipedia_v1
 from app.api.archivos.v1 import routes as archivos_v1
-from app.api.chatbot_programacion.v1 import routes as chatbot_prog_v1
+from app.api.chatbot_programacion.v1 import routes as chatbot_v1
+from app.api.busqueda.v1 import routes as busqueda_v1
 
 
 app = FastAPI(title=settings.app_name)
@@ -30,4 +31,5 @@ app.include_router(moderacion_v1.router, prefix="/api/v1/moderacion")
 app.include_router(presencia_v1.router, prefix="/api/v1/presencia")
 app.include_router(wikipedia_v1.router, prefix="/api/v1/wikipedia")
 app.include_router(archivos_v1.router, prefix="/api/v1/archivos")
-app.include_router(chatbot_prog_v1.router, prefix="/api/v1/chatbot-programacion")
+app.include_router(chatbot_v1.router, prefix="/api/v1/chatbot")
+app.include_router(busqueda_v1.router, prefix="/api/v1/busqueda")

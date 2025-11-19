@@ -46,13 +46,19 @@ class Settings:
     # Archivos
     files_service_base_url: str = os.getenv(
         "FILES_SERVICE_BASE_URL",
-        "http://files-service",
+        "http://file-service-134-199-176-197.nip.io/",
     )
 
-    # Chatbot de Programación
-    chatbot_programacion_service_base_url: str = os.getenv(
-        "CHATBOT_PROGRAMACION_SERVICE_BASE_URL",
+    # Chatbot de programación
+    chatbot_service_base_url: str = os.getenv(
+        "CHATBOT_SERVICE_BASE_URL",
         "https://chatbotprogra.inf326.nursoft.dev",
+    )
+
+    # Búsqueda
+    search_service_base_url: str = os.getenv(
+        "SEARCH_SERVICE_BASE_URL",
+        "https://searchservice.inf326.nursoft.dev",
     )
 
 
