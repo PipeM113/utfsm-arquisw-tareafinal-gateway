@@ -1,4 +1,3 @@
-# app/core/config.py
 from dataclasses import dataclass
 import os
 
@@ -47,7 +46,13 @@ class Settings:
     # Archivos
     files_service_base_url: str = os.getenv(
         "FILES_SERVICE_BASE_URL",
-        "http://file-service-134-199-176-197.nip.io/",
+        "http://files-service",
+    )
+
+    # Chatbot de Programación
+    chatbot_programacion_service_base_url: str = os.getenv(
+        "CHATBOT_PROGRAMACION_SERVICE_BASE_URL",
+        "https://chatbotprogra.inf326.nursoft.dev",
     )
 
 
