@@ -61,5 +61,11 @@ class Settings:
         "https://searchservice.inf326.nursoft.dev",
     )
 
+    # Hilos
+    threads_service_base_url: str = os.getenv(
+        "THREADS_SERVICE_BASE_URL",
+        "https://demo.inf326.nur.dev",
+    )
+
 
 settings = Settings()
