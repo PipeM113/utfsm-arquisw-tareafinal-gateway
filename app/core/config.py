@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 @dataclass
 class Settings:
@@ -10,61 +13,61 @@ class Settings:
     # Canales
     channels_service_base_url: str = os.getenv(
         "CHANNELS_SERVICE_BASE_URL",
-        "https://channel-api.inf326.nur.dev",
+        "https://channels.example.com",
     )
 
     # Usuarios
     users_service_base_url: str = os.getenv(
         "USERS_SERVICE_BASE_URL",
-        "https://users.inf326.nursoft.dev",
+        "https://users.example.com",
     )
 
     # Mensajes
     messages_service_base_url: str = os.getenv(
         "MESSAGES_SERVICE_BASE_URL",
-        "https://messages-service.kroder.dev",
+        "https://messages.example.com",
     )
 
     # Moderación
     moderation_service_base_url: str = os.getenv(
         "MODERATION_SERVICE_BASE_URL",
-        "https://moderation.inf326.nur.dev",
+        "https://moderation.example.com",
     )
 
     # Presencia
     presence_service_base_url: str = os.getenv(
         "PRESENCE_SERVICE_BASE_URL",
-        "https://moderation.inf326.nur.dev",
+        "https://presence.example.com",
     )
 
     # Chatbot Wikipedia
     wikipedia_service_base_url: str = os.getenv(
         "WIKIPEDIA_SERVICE_BASE_URL",
-        "http://wikipedia-chatbot-134-199-176-197.nip.io",
+        "https://wikipedia-chatbot.example.com",
     )
 
     # Archivos
     files_service_base_url: str = os.getenv(
         "FILES_SERVICE_BASE_URL",
-        "http://file-service-134-199-176-197.nip.io/",
+        "https://files.example.com",
     )
 
     # Chatbot de programación
     chatbot_service_base_url: str = os.getenv(
         "CHATBOT_SERVICE_BASE_URL",
-        "https://chatbotprogra.inf326.nursoft.dev",
+        "https://chatbotprogra.example.com",
     )
 
     # Búsqueda
     search_service_base_url: str = os.getenv(
         "SEARCH_SERVICE_BASE_URL",
-        "https://searchservice.inf326.nursoft.dev",
+        "https://searchservice.example.com",
     )
 
     # Hilos
     threads_service_base_url: str = os.getenv(
         "THREADS_SERVICE_BASE_URL",
-        "https://demo.inf326.nur.dev",
+        "https://threads.example.com",
     )
 
 

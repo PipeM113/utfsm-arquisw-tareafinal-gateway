@@ -23,6 +23,9 @@ def read_root():
         "environment": settings.environment,
     }
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 # Versión 1 de la API: montamos servicios
 app.include_router(canales_v1.router, prefix="/api/v1/canales")
