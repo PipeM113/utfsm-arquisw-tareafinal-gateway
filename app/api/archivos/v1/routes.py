@@ -175,4 +175,4 @@ async def presign_download(file_id: UUID):
     try:
         return await archivos_client.presign_download(file_id)
     except httpx.HTTPError as e:
-        raise _translate_httpx_error(e, "Error al generar URL de descarga")
+        raise _translate_httpx_error(e, f"Error al generar URL de descarga: {e}")

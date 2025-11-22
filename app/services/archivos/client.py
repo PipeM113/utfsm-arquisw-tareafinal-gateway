@@ -71,9 +71,16 @@ async def delete_file(file_id: UUID) -> None:
         return None  # 204 No Content
 
 
-async def presign_download(file_id: UUID) -> PresignDownloadResponse:
+async def presign_download(file_id: UUID) -> bytes:
     url = f"{FILES_BASE}/{file_id}/presign-download"
     async with httpx.AsyncClient() as client:
+        # 1. Obtener la URL presignada (interna)
         resp = await client.post(url)
         resp.raise_for_status()
-        return PresignDownloadResponse(**resp.json())
+        presign_data = PresignDownloadResponse(**resp.json())
+        
+        # 2. Descargar el archivo desde la URL interna
+        download_resp = await client.get(presign_data.url)
+        download_resp.raise_for_status()
+        
+        return download_resp.content
