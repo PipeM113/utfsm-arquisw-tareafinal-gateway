@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, status, Header
+from fastapi import APIRouter, HTTPException, status, Header, Depends
 import httpx
 
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.api.usuarios.v1.schemas import (
     UserRegisterIn,
     UserLoginIn,
@@ -14,6 +15,7 @@ router = APIRouter(
     tags=["usuarios"],
 )
 
+security = HTTPBearer()
 
 def _translate_httpx_error(e: httpx.HTTPError, default_message: str) -> HTTPException:
     """
@@ -75,18 +77,17 @@ async def login_user(payload: UserLoginIn):
     "/me",
     response_model=UserOut,
 )
-async def get_me(authorization: str = Header(..., alias="Authorization")):
+async def get_me(token: HTTPAuthorizationCredentials = Depends(security)):
     """
     Devuelve el perfil del usuario autenticado.
-
-    - El cliente debe enviar Authorization: Bearer <token>
-    - El gateway reenvía este header al MS de usuarios.
-
-    Gateway:    GET /api/v1/usuarios/me
-    MS usuarios: GET /v1/users/me
     """
+    # HTTPBearer extrae el token y verifica que empiece por "Bearer".
+    # token.credentials contiene solo el string del JWT (sin la palabra Bearer).
+    # Reconstruimos el header para el microservicio:
+    authorization_header = f"Bearer {token.credentials}"
+
     try:
-        return await usuarios_client.get_me(authorization_header=authorization)
+        return await usuarios_client.get_me(authorization_header=authorization_header)
     except httpx.HTTPError as e:
         raise _translate_httpx_error(e, "Error al obtener el perfil del usuario")
 
@@ -97,17 +98,16 @@ async def get_me(authorization: str = Header(..., alias="Authorization")):
 )
 async def update_me(
     payload: UserUpdateIn,
-    authorization: str = Header(..., alias="Authorization"),
+    token: HTTPAuthorizationCredentials = Depends(security),
 ):
     """
-    Actualiza el perfil del usuario autenticado (por ahora solo full_name).
-
-    Gateway:    PATCH /api/v1/usuarios/me
-    MS usuarios: PATCH /v1/users/me
+    Actualiza el perfil del usuario autenticado.
     """
+    authorization_header = f"Bearer {token.credentials}"
+
     try:
         return await usuarios_client.update_me(
-            authorization_header=authorization,
+            authorization_header=authorization_header,
             payload=payload,
         )
     except httpx.HTTPError as e:
