@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: channel-gateway-configmap
+  labels:
+    app: channel-gateway
+data:
+  # Entorno
+  ENVIRONMENT: "development"
+
+  # URLs de servicios
+  CHANNELS_SERVICE_BASE_URL: "https://channel-api.inf326.nur.dev"
+  USERS_SERVICE_BASE_URL: "https://users.inf326.nursoft.dev"
+  MESSAGES_SERVICE_BASE_URL: "https://messages-service.kroder.dev"
+  MODERATION_SERVICE_BASE_URL: "https://moderation.inf326.nur.dev"
+  PRESENCE_SERVICE_BASE_URL: "https://presence-134-199-176-197.nip.io/"
+  WIKIPEDIA_SERVICE_BASE_URL: "http://wikipedia-chatbot-134-199-176-197.nip.io"
+  FILES_SERVICE_BASE_URL: "http://file-service-134-199-176-197.nip.io/"
+  CHATBOT_SERVICE_BASE_URL: "https://chatbotprogra.inf326.nursoft.dev"
+  SEARCH_SERVICE_BASE_URL: "https://searchservice.inf326.nursoft.dev"
+  THREADS_SERVICE_BASE_URL: "https://threads.inf326.nursoft.dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: channel-gateway-service
+  labels:
+    app: channel-gateway
+spec:
+  type: ClusterIP
+  selector:
+    app: channel-gateway
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: channel-gateway-deployment
+  labels:
+    app: channel-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: channel-gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: channel-gateway
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: api
+          image: pipem114/api-gateway-arqui:v1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: channel-gateway-configmap
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10 # Equivalente a start_period
+            periodSeconds: 5
+            failureThreshold: 12 # 10s + (12 * 5s) = 70s para arrancar
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 30 # Equivalente a interval
+            timeoutSeconds: 5 # Equivalente a timeout
+            failureThreshold: 5 # Equivalente a retries
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: channel-gateway-hpa
+  labels:
+    app: channel-gateway
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: channel-gateway-deployment
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 50
