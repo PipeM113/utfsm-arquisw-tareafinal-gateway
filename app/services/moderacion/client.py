@@ -21,6 +21,9 @@ from app.services.moderacion.schemas import (
 )
 
 BASE_URL = settings.moderation_service_base_url.rstrip("/")
+MODERATION_BASE = f"{BASE_URL}/api/v1/moderation"
+BLACKLIST_BASE = f"{BASE_URL}/api/v1/blacklist"
+ADMIN_BASE = f"{BASE_URL}/api/v1/admin"
 
 
 def _api_key_header(api_key: Optional[str]) -> dict:
@@ -33,7 +36,7 @@ def _api_key_header(api_key: Optional[str]) -> dict:
 async def moderate_message(
     payload: ModerateMessageRequest,
 ) -> ModerateMessageResponse:
-    url = f"{BASE_URL}/check"
+    url = f"{MODERATION_BASE}/check"
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json=payload.dict())
         resp.raise_for_status()
@@ -43,7 +46,7 @@ async def moderate_message(
 async def analyze_text(
     payload: AnalyzeTextRequest,
 ) -> AnalyzeTextResponse:
-    url = f"{BASE_URL}/analyze"
+    url = f"{MODERATION_BASE}/analyze"
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json=payload.dict())
         resp.raise_for_status()
@@ -54,7 +57,7 @@ async def get_status(
     user_id: str,
     channel_id: str,
 ) -> ModerationStatusResponse:
-    url = f"{BASE_URL}/status/{user_id}/{channel_id}"
+    url = f"{MODERATION_BASE}/status/{user_id}/{channel_id}"
     async with httpx.AsyncClient() as client:
         resp = await client.get(url)
         resp.raise_for_status()
@@ -67,7 +70,7 @@ async def add_word(
     payload: AddWordRequest,
     api_key: str,
 ) -> SuccessResponse:
-    url = f"{BASE_URL}/words"
+    url = f"{BLACKLIST_BASE}/words"
     headers = _api_key_header(api_key)
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json=payload.dict(), headers=headers)
@@ -82,7 +85,7 @@ async def list_words(
     limit: int = 50,
     skip: int = 0,
 ) -> BlacklistWordsResponse:
-    url = f"{BASE_URL}/words"
+    url = f"{BLACKLIST_BASE}/words"
     params = {
         "limit": limit,
         "skip": skip,
@@ -104,7 +107,7 @@ async def delete_word(
     word_id: str,
     api_key: str,
 ) -> SuccessResponse:
-    url = f"{BASE_URL}/words/{word_id}"
+    url = f"{BLACKLIST_BASE}/words/{word_id}"
     headers = _api_key_header(api_key)
     async with httpx.AsyncClient() as client:
         resp = await client.delete(url, headers=headers)
@@ -113,7 +116,7 @@ async def delete_word(
 
 
 async def get_blacklist_stats() -> BlacklistStatsResponse:
-    url = f"{BASE_URL}/stats"
+    url = f"{BLACKLIST_BASE}/stats"
     async with httpx.AsyncClient() as client:
         resp = await client.get(url)
         resp.raise_for_status()
@@ -121,7 +124,7 @@ async def get_blacklist_stats() -> BlacklistStatsResponse:
 
 
 async def refresh_cache(api_key: str) -> SuccessResponse:
-    url = f"{BASE_URL}/refresh-cache"
+    url = f"{BLACKLIST_BASE}/refresh-cache"
     headers = _api_key_header(api_key)
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, headers=headers)
@@ -135,7 +138,7 @@ async def get_banned_users(
     api_key: str,
     channel_id: Optional[str] = None,
 ) -> BannedUsersResponse:
-    url = f"{BASE_URL}/banned-users"
+    url = f"{ADMIN_BASE}/banned-users"
     headers = _api_key_header(api_key)
     params = {}
     if channel_id is not None:
@@ -153,7 +156,7 @@ async def get_user_violations(
     limit: int = 50,
     api_key: str = "",
 ) -> UserViolationsResponse:
-    url = f"{BASE_URL}/users/{user_id}/violations"
+    url = f"{ADMIN_BASE}/users/{user_id}/violations"
     headers = _api_key_header(api_key)
     params = {"channel_id": channel_id, "limit": limit}
 
@@ -168,7 +171,7 @@ async def unban_user(
     payload: UnbanUserRequest,
     api_key: str,
 ) -> SuccessResponse:
-    url = f"{BASE_URL}/users/{user_id}/unban"
+    url = f"{ADMIN_BASE}/users/{user_id}/unban"
     headers = _api_key_header(api_key)
 
     async with httpx.AsyncClient() as client:
@@ -182,7 +185,7 @@ async def get_user_status(
     channel_id: str,
     api_key: str,
 ) -> UserStatusResponse:
-    url = f"{BASE_URL}/users/{user_id}/status"
+    url = f"{ADMIN_BASE}/users/{user_id}/status"
     headers = _api_key_header(api_key)
     params = {"channel_id": channel_id}
 
@@ -197,7 +200,7 @@ async def reset_strikes(
     channel_id: str,
     api_key: str,
 ) -> SuccessResponse:
-    url = f"{BASE_URL}/users/{user_id}/reset-strikes"
+    url = f"{ADMIN_BASE}/users/{user_id}/reset-strikes"
     headers = _api_key_header(api_key)
     params = {"channel_id": channel_id}
 
@@ -211,7 +214,7 @@ async def get_channel_stats(
     channel_id: str,
     api_key: str,
 ) -> ChannelStatsResponse:
-    url = f"{BASE_URL}/channels/{channel_id}/stats"
+    url = f"{ADMIN_BASE}/channels/{channel_id}/stats"
     headers = _api_key_header(api_key)
 
     async with httpx.AsyncClient() as client:
@@ -221,7 +224,7 @@ async def get_channel_stats(
 
 
 async def expire_bans(api_key: str) -> SuccessResponse:
-    url = f"{BASE_URL}/maintenance/expire-bans"
+    url = f"{ADMIN_BASE}/maintenance/expire-bans"
     headers = _api_key_header(api_key)
 
     async with httpx.AsyncClient() as client:

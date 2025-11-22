@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ChannelType(str, Enum):
@@ -9,9 +9,16 @@ class ChannelType(str, Enum):
     PRIVATE = "private"
 
 
+class ChannelMemberStatus(str, Enum):
+    NORMAL = "normal"
+    WARNING = "warning"
+    BANNED = "banned"
+
+
 class ChannelMember(BaseModel):
     id: str
     joined_at: float
+    status: ChannelMemberStatus
 
 
 class ErrorResponse(BaseModel):
@@ -20,7 +27,7 @@ class ErrorResponse(BaseModel):
 
 
 class Channel(BaseModel):
-    id: Optional[str] = None
+    id: Optional[str] = Field(None, alias="_id")
     name: str
     owner_id: str
     users: List[ChannelMember]
