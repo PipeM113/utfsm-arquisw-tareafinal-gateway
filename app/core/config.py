@@ -70,5 +70,11 @@ class Settings:
         "https://threads.example.com",
     )
 
+    #CORS
+    cors_allowed_origins: str = os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "*",   
+    )
+
 
 settings = Settings()
