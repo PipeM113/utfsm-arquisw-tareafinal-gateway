@@ -40,56 +40,56 @@ def _translate_httpx_error(e: httpx.HTTPError, default_message: str) -> HTTPExce
     )
 
 
-@router.get(
-    "/health",
-    response_model=HealthResponse,
-)
-async def health():
-    """
-    Verifica que el servicio de chatbot de programación esté operativo.
+# @router.get(
+#     "/health",
+#     response_model=HealthResponse,
+# )
+# async def health():
+#     """
+#     Verifica que el servicio de chatbot de programación esté operativo.
 
-    Gateway: GET /api/v1/chatbot-programacion/health
-    MS:      GET /health
-    """
-    try:
-        return await chatbot_client.health()
-    except httpx.HTTPError as e:
-        raise _translate_httpx_error(e, "Error al verificar salud del chatbot")
-
-
-@router.get(
-    "/questions",
-    response_model=QuestionResponse,
-)
-async def get_question():
-    """
-    Obtiene una pregunta aleatoria de programación y la publica en la cola.
-
-    Gateway: GET /api/v1/chatbot-programacion/questions
-    MS:      GET /questions
-    """
-    try:
-        return await chatbot_client.get_question()
-    except httpx.HTTPError as e:
-        raise _translate_httpx_error(e, "Error al obtener pregunta de programación")
+#     Gateway: GET /api/v1/chatbot-programacion/health
+#     MS:      GET /health
+#     """
+#     try:
+#         return await chatbot_client.health()
+#     except httpx.HTTPError as e:
+#         raise _translate_httpx_error(e, "Error al verificar salud del chatbot")
 
 
-@router.post(
-    "/questions/publish",
-    response_model=QuestionResponse,
-    status_code=status.HTTP_200_OK,
-)
-async def publish_question():
-    """
-    Publica explícitamente una pregunta de programación en la cola.
+# @router.get(
+#     "/questions",
+#     response_model=QuestionResponse,
+# )
+# async def get_question():
+#     """
+#     Obtiene una pregunta aleatoria de programación y la publica en la cola.
 
-    Gateway: POST /api/v1/chatbot-programacion/questions/publish
-    MS:      POST /question/publish
-    """
-    try:
-        return await chatbot_client.publish_question()
-    except httpx.HTTPError as e:
-        raise _translate_httpx_error(e, "Error al publicar pregunta de programación")
+#     Gateway: GET /api/v1/chatbot-programacion/questions
+#     MS:      GET /questions
+#     """
+#     try:
+#         return await chatbot_client.get_question()
+#     except httpx.HTTPError as e:
+#         raise _translate_httpx_error(e, "Error al obtener pregunta de programación")
+
+
+# @router.post(
+#     "/questions/publish",
+#     response_model=QuestionResponse,
+#     status_code=status.HTTP_200_OK,
+# )
+# async def publish_question():
+#     """
+#     Publica explícitamente una pregunta de programación en la cola.
+
+#     Gateway: POST /api/v1/chatbot-programacion/questions/publish
+#     MS:      POST /question/publish
+#     """
+#     try:
+#         return await chatbot_client.publish_question()
+#     except httpx.HTTPError as e:
+#         raise _translate_httpx_error(e, "Error al publicar pregunta de programación")
 
 
 @router.post(
