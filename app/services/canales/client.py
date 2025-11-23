@@ -81,7 +81,11 @@ async def add_member(payload: ChannelUserPayload) -> Channel:
 
 async def remove_member(payload: ChannelUserPayload) -> Channel:
     async with httpx.AsyncClient() as client:
-        resp = await client.delete(f"{MEMBERS_BASE}/", json=payload.dict())
+        resp = await client.request(
+            method="DELETE",
+            url=f"{MEMBERS_BASE}/",
+            json=payload.dict()
+        )
         resp.raise_for_status()
         return Channel(**resp.json())
 
