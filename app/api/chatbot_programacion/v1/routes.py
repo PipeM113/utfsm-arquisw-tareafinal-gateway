@@ -40,21 +40,21 @@ def _translate_httpx_error(e: httpx.HTTPError, default_message: str) -> HTTPExce
     )
 
 
-@router.get(
-    "/health",
-    response_model=HealthResponse,
-)
-async def health():
-    """
-    Verifica que el servicio de chatbot de programación esté operativo.
+# @router.get(
+#     "/health",
+#     response_model=HealthResponse,
+# )
+# async def health():
+#     """
+#     Verifica que el servicio de chatbot de programación esté operativo.
 
-    Gateway: GET /api/v1/chatbot-programacion/health
-    MS:      GET /health
-    """
-    try:
-        return await chatbot_client.health()
-    except httpx.HTTPError as e:
-        raise _translate_httpx_error(e, "Error al verificar salud del chatbot")
+#     Gateway: GET /api/v1/chatbot-programacion/health
+#     MS:      GET /health
+#     """
+#     try:
+#         return await chatbot_client.health()
+#     except httpx.HTTPError as e:
+#         raise _translate_httpx_error(e, "Error al verificar salud del chatbot")
 
 
 # @router.get(
