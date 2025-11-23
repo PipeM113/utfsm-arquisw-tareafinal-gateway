@@ -4,7 +4,7 @@ from typing import List, Optional
 import httpx
 
 from app.core.config import settings
-from app.services.hilos.schemas import ThreadCreate, ThreadOut, ThreadUpdate
+from app.services.hilos.schemas import ThreadCreate, ThreadOut, ThreadUpdate, ThreadBasicInfo
 
 BASE_URL = settings.threads_service_base_url.rstrip("/")
 BASE_URL = f"{BASE_URL}/threads"
@@ -16,7 +16,7 @@ async def create_thread(payload: ThreadCreate) -> ThreadOut:
     """
     POST /v1/  -> crea un nuevo hilo y devuelve ThreadOut.
     """
-    url = f"{THREADS_BASE}/"
+    url = f"{THREADS_BASE}/?channel_id={payload.channel_id}&thread_name={payload.title}&user_id={payload.created_by}"
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json=payload.dict())
         resp.raise_for_status()
@@ -86,7 +86,7 @@ async def delete_thread(thread_id: str) -> None:
         return None
 
 
-async def get_threads_by_channel(channel_id: str) -> List[ThreadOut]:
+async def get_threads_by_channel(channel_id: str) -> List[ThreadBasicInfo]:
     """
     GET /v1/channel/{channel_id}/threads  -> lista hilos de un canal específico.
     """
@@ -95,4 +95,4 @@ async def get_threads_by_channel(channel_id: str) -> List[ThreadOut]:
         resp = await client.get(url)
         resp.raise_for_status()
         data = resp.json()
-        return [ThreadOut(**item) for item in data]
+        return [ThreadBasicInfo(**item) for item in data]

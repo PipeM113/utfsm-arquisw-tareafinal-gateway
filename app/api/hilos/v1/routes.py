@@ -8,6 +8,7 @@ from app.api.hilos.v1.schemas import (
     ThreadCreate,
     ThreadUpdate,
     ThreadOut,
+    ThreadBasicInfo
 )
 from app.services.hilos import client as hilos_client
 
@@ -62,7 +63,7 @@ async def create_thread(payload: ThreadCreate):
 
 @router.get(
     "/",
-    response_model=List[ThreadOut],
+    response_model=List[ThreadBasicInfo],
 )
 async def list_threads(
     channel_id: Optional[str] = Query(
