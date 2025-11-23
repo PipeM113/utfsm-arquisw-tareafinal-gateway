@@ -9,6 +9,7 @@ from app.services.hilos.schemas import (
     ThreadCreate,
     ThreadUpdate,
     ThreadOut,
+    ThreadBasicInfo
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "ThreadCreate",
     "ThreadUpdate",
     "ThreadOut",
+    "ThreadBasicInfo"
 ]

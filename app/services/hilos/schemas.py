@@ -25,11 +25,17 @@ class ThreadUpdate(BaseModel):
 
 
 class ThreadOut(BaseModel):
-    id: str
+    thread_id: str
     channel_id: str
     title: str
     created_by: str
-    status: ThreadStatus
+    # status: ThreadStatus
     meta: Optional[Dict[str, Any]] = None
     created_at: datetime
-    updated_at: datetime
+    # updated_at: datetime
+
+class ThreadBasicInfo(BaseModel):
+    thread_id: str
+    title: str
+    created_by: str
+    channel_id: str
