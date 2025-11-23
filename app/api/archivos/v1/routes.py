@@ -11,10 +11,12 @@ from fastapi import (
     File,
     status,
 )
+from fastapi.responses import Response
 
 from app.api.archivos.v1.schemas import (
     FileOut,
     PresignDownloadResponse,
+    PresignDownloadRequest
 )
 from app.services.archivos import client as archivos_client
 
@@ -176,3 +178,30 @@ async def presign_download(file_id: UUID):
         return await archivos_client.presign_download(file_id)
     except httpx.HTTPError as e:
         raise _translate_httpx_error(e, f"Error al generar URL de descarga: {e}")
+
+
+@router.post(
+    "/download",
+    status_code=status.HTTP_200_OK,
+    response_class=Response,
+)
+async def download_file(request: PresignDownloadRequest):
+    """
+    Descarga un archivo utilizando una URL interna firmada.
+
+    Gateway:    POST /api/v1/archivos/download
+    MS archivos: Descarga directa desde URL interna (MinIO/S3)
+    """
+    try:
+        file_content = await archivos_client.download_file_url(request.file_url)
+        
+        # Retornar el contenido del archivo con headers apropiados
+        return Response(
+            content=file_content,
+            media_type="application/octet-stream",
+            headers={
+                "Content-Disposition": "attachment"
+            }
+        )
+    except httpx.HTTPError as e:
+        raise _translate_httpx_error(e, "Error al descargar el archivo")
