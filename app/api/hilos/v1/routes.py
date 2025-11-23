@@ -77,7 +77,7 @@ async def list_threads(
     MS hilos: GET /v1/
     """
     try:
-        return await hilos_client.list_threads(channel_id=channel_id)
+        return await hilos_client.get_threads_by_channel(channel_id=channel_id)
     except httpx.HTTPError as e:
         raise _translate_httpx_error(e, "Error al listar hilos")
 

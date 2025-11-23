@@ -7,7 +7,9 @@ from app.core.config import settings
 from app.services.hilos.schemas import ThreadCreate, ThreadOut, ThreadUpdate
 
 BASE_URL = settings.threads_service_base_url.rstrip("/")
-THREADS_BASE = f"{BASE_URL}/v1"
+BASE_URL = f"{BASE_URL}/threads"
+THREADS_BASE = f"{BASE_URL}/threads"
+CHANNELS_BASE = f"{BASE_URL}/channel"
 
 
 async def create_thread(payload: ThreadCreate) -> ThreadOut:
@@ -82,3 +84,15 @@ async def delete_thread(thread_id: str) -> None:
         resp = await client.delete(url)
         resp.raise_for_status()
         return None
+
+
+async def get_threads_by_channel(channel_id: str) -> List[ThreadOut]:
+    """
+    GET /v1/channel/{channel_id}/threads  -> lista hilos de un canal específico.
+    """
+    url = f"{CHANNELS_BASE}/get_threads?channel_id={channel_id}"
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url)
+        resp.raise_for_status()
+        data = resp.json()
+        return [ThreadOut(**item) for item in data]
